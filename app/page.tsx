@@ -29,7 +29,7 @@ export default function Home() {
 
   const handleNewChat = (category: string = "General Chat") => {
     const newChat: Chat = {
-      id: Date.now().toLocaleString(),
+      id: Date.now().toString(),
       title: "New Chat",
       messages: [],
       category,
@@ -50,7 +50,7 @@ export default function Home() {
     if (!activeChat) return;
 
     const userMessage: Message = {
-      id: Date.now().toLocaleString(),
+      id: Date.now().toString(),
       role: "user",
       content,
       timestamp: new Date().toISOString(),
@@ -68,8 +68,7 @@ export default function Home() {
       )
     );
 
-    // TODO: Implement API call to Python backend
-    // For now, simulate AI response
+    // Simulate AI response
     setTimeout(() => {
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -96,16 +95,19 @@ export default function Home() {
         onSelectChat={setActiveChat}
         onDeleteChat={handleDeleteChat}
       />
-      <main className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col items-center justify-center p-4">
         {activeChat ? (
-          <>
-            <ChatMessages messages={currentChat?.messages || []} />
-            <ChatInput
-              onSend={handleSendMessage}
-              onVoiceInput={() => {}}
-              onFileUpload={() => {}}
-            />
-          </>
+          <div className="flex flex-col w-full max-w-2xl h-full justify-between">
+            {/* Chat Messages */}
+            <div className="flex-1 overflow-y-auto w-full">
+              <ChatMessages messages={currentChat?.messages || []} />
+            </div>
+
+            {/* Chat Input */}
+            <div className="w-full">
+              <ChatInput onSend={handleSendMessage} onVoiceInput={() => {}} onFileUpload={() => {}} />
+            </div>
+          </div>
         ) : (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
