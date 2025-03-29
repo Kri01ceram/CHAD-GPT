@@ -52,15 +52,15 @@ export function ChatInput({ onSend, onVoiceInput, onFileUpload }: ChatInputProps
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Type your message..."
-          className="min-h-[60px]"
+          className="min-h-[2rem]"
           rows={1}
         />
         <Button
-          className="shrink-0"
+          className="shrink-0 h-[2.5rem]"
           onClick={handleSend}
           disabled={!message.trim()}
         >
-          <Send className="h-4 w-4" />
+          <Send className="h-8 w-4" />
         </Button>
       </div>
     </div>
