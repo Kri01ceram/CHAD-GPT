@@ -44,9 +44,9 @@ export function ChatMessages({ messages }: ChatMessagesProps) {
             </Avatar>
 
             {/* Message container with hover effect */}
-            <div className="relative group min-w-[12%]">
+            <div className="relative group flex min-w-[12%] max-w-[70%]">
               <div
-                className={`rounded-lg px-4 py-2 ml-8 max-w-[100%] ${
+                className={`rounded-lg px-4 py-2 ml-8 break-words ${
                   message.role === "assistant"
                     ? "bg-secondary"
                     : "bg-primary text-primary-foreground"
