@@ -3,7 +3,7 @@
 import { useRef, useEffect } from "react";
 import { Avatar } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, User } from "lucide-react";
+import { Bot, User, Copy } from "lucide-react";
 
 interface Message {
   id: string;
@@ -42,17 +42,34 @@ export function ChatMessages({ messages }: ChatMessagesProps) {
                 <User className="h-5 w-5" />
               )}
             </Avatar>
-            <div
-              className={`rounded-lg px-4 py-2 max-w-[80%] ${
-                message.role === "assistant"
-                  ? "bg-secondary"
-                  : "bg-primary text-primary-foreground"
-              }`}
-            >
-              <p className="text-sm">{message.content}</p>
-              <span className="text-xs opacity-50 mt-1 block">
-                {new Date(message.timestamp).toLocaleTimeString()}
-              </span>
+
+            {/* Message container with hover effect */}
+            <div className="relative group min-w-[12%]">
+              <div
+                className={`rounded-lg px-4 py-2 ml-8 max-w-[100%] ${
+                  message.role === "assistant"
+                    ? "bg-secondary"
+                    : "bg-primary text-primary-foreground"
+                }`}
+              >
+                <p className="text-sm">{message.content}</p>
+
+                {/* Timestamp & Copy Icon Container */}
+                <div className="flex items-center gap-1 mt-1 text-xs opacity-50">
+                  <span>
+                    {new Date(message.timestamp).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+
+                  {/* Copy Icon (Appears on Hover) */}
+                  <Copy
+                    className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer hover:opacity-100"
+                    onClick={() => navigator.clipboard.writeText(message.content)}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         ))}

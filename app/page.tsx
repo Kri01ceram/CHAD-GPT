@@ -29,7 +29,7 @@ export default function Home() {
 
   const handleNewChat = (category: string = "General Chat") => {
     const newChat: Chat = {
-      id: Date.now().toString(),
+      id: Date.now().toLocaleString(),
       title: "New Chat",
       messages: [],
       category,
@@ -50,7 +50,7 @@ export default function Home() {
     if (!activeChat) return;
 
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: Date.now().toLocaleString(),
       role: "user",
       content,
       timestamp: new Date().toISOString(),
