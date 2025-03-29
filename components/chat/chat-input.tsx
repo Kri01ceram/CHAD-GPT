@@ -29,12 +29,12 @@ export function ChatInput({ onSend, onVoiceInput, onFileUpload }: ChatInputProps
   };
 
   return (
-    <div className="border-t bg-card p-4">
+    <div className="border-t bg-card p-4 rounded-3xl">
       <div className="flex items-end gap-2">
         <Button
           variant="outline"
           size="icon"
-          className="shrink-0"
+          className="shrink-0 bg-card"
           onClick={onFileUpload}
         >
           <Upload className="h-4 w-4" />
@@ -42,7 +42,7 @@ export function ChatInput({ onSend, onVoiceInput, onFileUpload }: ChatInputProps
         <Button
           variant="outline"
           size="icon"
-          className="shrink-0"
+          className="shrink-0 bg-card"
           onClick={onVoiceInput}
         >
           <Mic className="h-4 w-4" />
@@ -52,7 +52,7 @@ export function ChatInput({ onSend, onVoiceInput, onFileUpload }: ChatInputProps
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Type your message..."
-          className="min-h-[2rem]"
+          className="min-h-[2rem] bg-card"
           rows={1}
         />
         <Button
