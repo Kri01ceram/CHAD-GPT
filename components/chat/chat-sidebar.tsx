@@ -24,7 +24,16 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Moon, Sun, Plus, Settings, MessageSquare, Trash2, User } from "lucide-react";
+import {
+  Moon,
+  Sun,
+  Plus,
+  Settings,
+  MessageSquare,
+  Trash2,
+  User,
+  AlignJustify,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 
@@ -58,22 +67,27 @@ export function ChatSidebar({
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Implement actual authentication
-    setIsAuthenticated(true);
-    setShowAuthDialog(false);
-    setEmail("");
-    setPassword("");
-  };
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen w-[300px] flex-col bg-card border-r">
-      <div className="p-4">
-        <Button className="w-full" onClick={() => onNewChat("General Chat")}>
-          <Plus className="mr-2 h-4 w-4" />
-          New Chat
+    <div
+      className={`flex h-screen flex-col bg-card border-r transition-all duration-300 ${
+        collapsed ? "w-16" : "w-[300px]"
+      }`}
+    >
+      <div className="p-4 flex justify-center items-center gap-4">
+        {!collapsed && (
+          <Button className="w-full" onClick={() => onNewChat("General Chat")}>
+            <Plus className="mr-2 h-4 w-4" />
+            New Chat
+          </Button>
+        )}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setCollapsed(!collapsed)}
+        >
+          <AlignJustify />
         </Button>
       </div>
       <Separator />
@@ -81,11 +95,11 @@ export function ChatSidebar({
         <div className="space-y-4 py-4">
           <div className="px-2">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-lg font-semibold tracking-tight">
-                Chats
-              </h2>
+              {!collapsed && (
+                <h2 className="text-lg font-semibold tracking-tight">Chats</h2>
+              )}
             </div>
-            <div className="space-y-1">
+            <div className={`space-y-1 ${collapsed ? "hidden" : "block"}`}>
               {chats.map((chat) => (
                 <div key={chat.id} className="flex items-center gap-1">
                   <Button
@@ -94,39 +108,47 @@ export function ChatSidebar({
                     onClick={() => onSelectChat(chat.id)}
                   >
                     <MessageSquare className="mr-2 h-4 w-4" />
-                    <span className="truncate">{chat.title}</span>
+                    {!collapsed && <span className="truncate">{chat.title}</span>}
                   </Button>
-                  <AlertDialog open={chatToDelete === chat.id} onOpenChange={(open) => !open && setChatToDelete(null)}>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 shrink-0"
-                        onClick={() => setChatToDelete(chat.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Chat</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Are you sure you want to delete this chat? This action cannot be undone.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => {
-                            onDeleteChat(chat.id);
-                            setChatToDelete(null);
-                          }}
+                  {!collapsed && (
+                    <AlertDialog
+                      open={chatToDelete === chat.id}
+                      onOpenChange={(open) =>
+                        !open && setChatToDelete(null)
+                      }
+                    >
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 shrink-0"
+                          onClick={() => setChatToDelete(chat.id)}
                         >
-                          Delete
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Chat</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to delete this chat? This
+                            action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => {
+                              onDeleteChat(chat.id);
+                              setChatToDelete(null);
+                            }}
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
                 </div>
               ))}
             </div>
@@ -145,7 +167,7 @@ export function ChatSidebar({
           ) : (
             <Moon className="mr-2 h-4 w-4" />
           )}
-          Toggle Theme
+          {!collapsed && "Toggle Theme"}
         </Button>
         <Dialog open={showAuthDialog} onOpenChange={setShowAuthDialog}>
           <DialogTrigger asChild>
@@ -159,19 +181,21 @@ export function ChatSidebar({
               }}
             >
               <User className="mr-2 h-4 w-4" />
-              {isAuthenticated ? "Profile" : "Sign In"}
+              {!collapsed && (isAuthenticated ? "Profile" : "Sign In")}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{authMode === "login" ? "Sign In" : "Create Account"}</DialogTitle>
+              <DialogTitle>
+                {authMode === "login" ? "Sign In" : "Create Account"}
+              </DialogTitle>
               <DialogDescription>
                 {authMode === "login"
                   ? "Sign in to your account to access your chats"
                   : "Create a new account to get started"}
               </DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleAuth} className="space-y-4">
+            <form className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -196,7 +220,9 @@ export function ChatSidebar({
                 <Button
                   type="button"
                   variant="ghost"
-                  onClick={() => setAuthMode(authMode === "login" ? "register" : "login")}
+                  onClick={() =>
+                    setAuthMode(authMode === "login" ? "register" : "login")
+                  }
                 >
                   {authMode === "login" ? "Create Account" : "Sign In"}
                 </Button>
@@ -207,14 +233,6 @@ export function ChatSidebar({
             </form>
           </DialogContent>
         </Dialog>
-        <Button
-          variant="ghost"
-          className="w-full justify-start"
-          onClick={() => {}}
-        >
-          <Settings className="mr-2 h-4 w-4" />
-          Settings
-        </Button>
       </div>
     </div>
   );
